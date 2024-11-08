@@ -138,7 +138,7 @@ Bun.serve({
             //const aiResponse = await sendMsgToOpenAI("if you want to go to space, you're a little to full of yourself says one who sings songs about her exes and their new rides for bunch of 16 year old girls")
             //wait for stream to finish
             const parsedAiResponse = JSON.stringify(aiResponse)
-            const allowedOrigin = prod.includes("localhost") ? "http://localhost:5173" : "https://analysooorfrontend.vercel.app/"
+            const allowedOrigin = prod.includes("localhost") ? "http://localhost:5173" : "https://analysooorfrontend.vercel.app"
             if (req.method === "OPTIONS") {
                 return new Response(parsedAiResponse, {
                     headers: {
