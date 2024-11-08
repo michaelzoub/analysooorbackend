@@ -6,9 +6,16 @@ import { sendMsgToOpenAI } from "./service/openai";
 
 console.log("Hello via Bun!");
 
+let prod = ""
+if (prod.includes("localhost")) {
+    prod = 8080
+} else {
+    prod = ""
+}
+
 Bun.serve({
-    domain: "localhost",
-    port: 8080,
+
+    port: prod,
     async fetch(req) {
         const res = new Response("Twitter")
         const url = new URL(req.url)
