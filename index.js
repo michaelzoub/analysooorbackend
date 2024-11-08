@@ -14,7 +14,6 @@ if (prod.includes("localhost")) {
 }
 
 Bun.serve({
-
     port: prod,
     async fetch(req) {
         const res = new Response("Twitter")
@@ -139,10 +138,11 @@ Bun.serve({
             //const aiResponse = await sendMsgToOpenAI("if you want to go to space, you're a little to full of yourself says one who sings songs about her exes and their new rides for bunch of 16 year old girls")
             //wait for stream to finish
             const parsedAiResponse = JSON.stringify(aiResponse)
+            const allowedOrigin = prod.includes("localhost") ? "http://localhost:5173" : "https://analysooorfrontend.vercel.app/"
             if (req.method === "OPTIONS") {
                 return new Response(parsedAiResponse, {
                     headers: {
-                        "Access-Control-Allow-Origin": "http://localhost:5173",
+                        "Access-Control-Allow-Origin": allowedOrigin,
                         "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
                         "Access-Control-Allow-Headers": "Content-Type",
                         "Content-Type": "application/json"
@@ -151,7 +151,7 @@ Bun.serve({
             }
             return new Response(parsedAiResponse, {
                 headers: {
-                    "Access-Control-Allow-Origin": "http://localhost:5173", // Specify your frontend origin
+                    "Access-Control-Allow-Origin": allowedOrigin,
                     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
                     "Access-Control-Allow-Headers": "Content-Type",
                     "Content-Type": "application/json"
