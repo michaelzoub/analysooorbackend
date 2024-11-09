@@ -6,7 +6,7 @@ import { sendMsgToOpenAI } from "./service/openai";
 
 console.log("Hello via Bun!");
 
-let prod = ""
+let prod = "localhost"
 if (prod.includes("localhost")) {
     prod = 8080
 } else {
@@ -28,6 +28,7 @@ Bun.serve({
                 parsedUsernameArray.push(at.split("@")[1])
                 console.log("Parsed username array: ", parsedUsernameArray)
             })
+            console.log("Username array: ", usernameArray)
             const nonExistingIDs = await checkForNonExisting(parsedUsernameArray)
             const existingIDs = await find(parsedUsernameArray)
             console.log("Non existing usernames in db: ", nonExistingIDs[0])
@@ -80,10 +81,12 @@ Bun.serve({
             let parsedUsernameArray = []
             let usernamesToInsertList = []
             let IDsToInsertList = []
-            usernameArray.forEach((at) => {
-                parsedUsernameArray.push(at.split("@")[1])
-                console.log("Parsed username array: ", parsedUsernameArray)
-            })
+            if (usernameArray[0].includes("@")) {
+                usernameArray.forEach((at) => {
+                    parsedUsernameArray.push(at.split("@")[1])
+                    console.log("Parsed username array: ", parsedUsernameArray)
+                })
+            }
             const nonExistingIDs = await checkForNonExisting(parsedUsernameArray) //returns non existing
             console.log("Non existing IDs in DB: ", nonExistingIDs[0])
             let existingUsers = await find(parsedUsernameArray) //returns all
@@ -138,11 +141,11 @@ Bun.serve({
             //const aiResponse = await sendMsgToOpenAI("if you want to go to space, you're a little to full of yourself says one who sings songs about her exes and their new rides for bunch of 16 year old girls")
             //wait for stream to finish
             const parsedAiResponse = JSON.stringify(aiResponse)
-            const allowedOrigin = req.headers.get("origin") === "http://localhost:5173" ? "http://localhost:5173" : "https://analysooorfrontend.vercel.app"
+            const allowedOrigin = req.headers.get("origin").includes("localhost") ? "http://localhost:5173" : "https://analysooorfrontend.vercel.app"
             if (req.method === "OPTIONS") {
                 return new Response(parsedAiResponse, {
                     headers: {
-                        "Access-Control-Allow-Origin": allowedOrigin,
+                        "Access-Control-Allow-Origin": "http://localhost:5173",
                         "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
                         "Access-Control-Allow-Headers": "Content-Type",
                         "Content-Type": "application/json"
@@ -151,7 +154,7 @@ Bun.serve({
             }
             return new Response(parsedAiResponse, {
                 headers: {
-                    "Access-Control-Allow-Origin": allowedOrigin,
+                    "Access-Control-Allow-Origin": "http://localhost:5173",
                     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
                     "Access-Control-Allow-Headers": "Content-Type",
                     "Content-Type": "application/json"
